@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { srConfig } from '@config';
@@ -165,29 +164,41 @@ const StyledTabPanel = styled.div`
 `;
 
 const Jobs = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      jobs: allMarkdownRemark(
-        filter: { fileAbsolutePath: { regex: "/content/jobs/" } }
-        sort: { fields: [frontmatter___date], order: DESC }
-      ) {
-        edges {
-          node {
-            frontmatter {
-              title
-              company
-              location
-              range
-              url
-            }
-            html
-          }
-        }
-      }
-    }
-  `);
-
-  const jobsData = data.jobs.edges;
+  const jobsData = [
+    {
+      frontmatter: {
+        title: 'Software Developer',
+        company: 'Mealzo',
+        location: 'Tabriz',
+        range: 'September 2024 - Present',
+        url: 'https://mealzo.co.uk/',
+      },
+      html:
+        '<ul><li>Collaboration in a Front-End Team of 10 People: I actively contributed to a front-end team consisting of 7 members. Our collaborative efforts focused on web development projects.</li><li>Employment in a Company with 150-200 Employees: I worked within an organization comprising 150-200 employees. This experience allowed me to engage with a diverse workforce and understand organizational dynamics.</li><li>Redesigning Existing Websites: I participated in website redesign projects. By revamping user interfaces and optimizing user experiences, we aimed to enhance overall website performance.</li><li>Collaboration with Cross-Functional Teams: I collaborated with various teams, including back-end developers, UI/UX designers, financial analysts, marketing specialists, DevOps engineers, and customer support. Our collective efforts ensured seamless project execution.</li><li>Website Performance Improvement: I focused on improving website performance metrics. This included optimizing loading times, minimizing resource requests, and enhancing overall responsiveness.</li><li>Development of Intra-Organizational Web-Based Management Panels: I created web-based management panels tailored to our organization’s needs. These panels facilitated efficient internal communication, data management, and decision-making.</li></ul>',
+    },
+    {
+      frontmatter: {
+        title: 'Software Developer',
+        company: 'Evtap',
+        location: 'Tabriz',
+        range: 'October 2023 - September 2024',
+        url: 'https://evtap.ir',
+      },
+      html:
+        '<ul><li>Full-Stack Developer Role: I actively contributed as a full-stack developer. My responsibilities included both front-end and back-end development for web projects.</li><li>Collaboration in a 5-Person Team: I worked closely with a team of 5 members. Our collaborative efforts were focused on various web development projects.</li><li>Real Estate Website Development: I participated in the development of a real estate website. This involved creating features such as an admin panel based on Next, OTP authentication, a blog, and real estate listings.</li><li>OTP Authentication, Blog, Show real estate, and some other features.</li></ul>',
+    },
+    {
+      frontmatter: {
+        title: 'Software Developer',
+        company: 'GoToSafar',
+        location: 'Tabriz',
+        range: 'August 2022 - September 2023',
+        url: 'https://gotosafar.com',
+      },
+      html:
+        '<ul><li>Deep Dive into HTML, CSS, and JavaScript: I delved into the intricacies of these core web technologies, ensuring a strong foundation for building user interfaces.</li><li>Learning React.js Framework: I actively pursued learning React.js, a popular JavaScript library for building dynamic and responsive web applications.</li><li>Template Implementation: I successfully implemented website templates using HTML, CSS, and vanilla JavaScript. This involved creating visually appealing and functional layouts.</li><li> Familiarity with MUI and Ant Design: I gained proficiency in using Material-UI (MUI) and Ant Design libraries. These UI frameworks allowed me to create consistent and feature-rich interfaces.</li><li>React.js Tasks: I contributed to React.js projects by handling smaller tasks, such as component development, state management, and integrating APIs.</li></ul>',
+    },
+  ];
 
   const [activeTabId, setActiveTabId] = useState(0);
   const [tabFocus, setTabFocus] = useState(null);
@@ -244,13 +255,13 @@ const Jobs = () => {
 
   return (
     <StyledJobsSection id="jobs" ref={revealContainer}>
-      <h2 className="numbered-heading">Where I’ve Worked</h2>
+      <h2 className="numbered-heading">Where I've Worked</h2>
 
       <div className="inner">
         <StyledTabList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
           {jobsData &&
-            jobsData.map(({ node }, i) => {
-              const { company } = node.frontmatter;
+            jobsData.map(({ frontmatter }, i) => {
+              const { company } = frontmatter;
               return (
                 <StyledTabButton
                   key={i}
@@ -271,8 +282,7 @@ const Jobs = () => {
 
         <StyledTabPanels>
           {jobsData &&
-            jobsData.map(({ node }, i) => {
-              const { frontmatter, html } = node;
+            jobsData.map(({ frontmatter, html }, i) => {
               const { title, url, company, range } = frontmatter;
 
               return (
@@ -287,7 +297,7 @@ const Jobs = () => {
                     <h3>
                       <span>{title}</span>
                       <span className="company">
-                        &nbsp;@&nbsp;
+                        &nbsp;@
                         <a href={url} className="inline-link">
                           {company}
                         </a>
